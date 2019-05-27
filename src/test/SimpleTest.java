@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Time;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class SimpleTest {
@@ -41,9 +43,9 @@ public class SimpleTest {
 
     public static void main(String[] args)
     {
-        System.out.println(1.0/0.0);
-        int nx = 200;//3840;//1280;//3840;//1920;//200;
-        int ny = 100;//2160;//720;//2160;//1080;//100;
+        //System.out.println(1.0/0.0);
+        int nx = 1280;//3840;//1280;//3840;//1920;//200;
+        int ny = 720;//2160;//720;//2160;//1080;//100;
         int ns = 100;
         Vector3 lookfrom = new Vector3(13, 2 ,3);//new Vector3(-2,2,1);//new Vector3(3,3,2);
         Vector3 lookat = new Vector3(0, 0, 0);//new Vector3(0,0,-1);
@@ -64,7 +66,13 @@ public class SimpleTest {
 //        world.addHitable(new Sphere(new Vector3(-1, 0, -1), -0.45, new Dielectric(1.5)));
 
         Hitable world = random_scene();
+        world = new BVH_node(((HitableList)world).getHitList(), 0, 1);
 
+//        List<Hitable> list = new ArrayList<>();
+//        list.add(new Sphere(new Vector3(0, 0, 0), 1, new Dielectric(1.5)));
+//        list.add(new Sphere(new Vector3(0, 0, 0), 1, new Dielectric(1.5)));
+//        list.add(new Sphere(new Vector3(0, 0, 2), 1, new Dielectric(1.5)));
+//        Hitable world = new BVH_node(list, 0, 1);
 //        double R = Math.cos(Math.PI/4);
 //        world.addHitable(new Sphere(new Vector3(-R,0,-1), R, new Lambertian(new Vector3(0,0,1))));
 //        world.addHitable(new Sphere(new Vector3(R,0,-1), R, new Lambertian(new Vector3(1,0,0))));
@@ -72,6 +80,7 @@ public class SimpleTest {
         BufferedImage bufferedImage = new BufferedImage(nx,ny,BufferedImage.TYPE_INT_ARGB);
         Random rand = new Random(42);
 
+        LocalTime start = LocalTime.now();
         System.out.println("0%; Time: " + LocalTime.now());
         for(int j = 0; j < ny; j++)
         {
@@ -107,7 +116,9 @@ public class SimpleTest {
             if(percent >= 10 && percent % 10 == 0)
                 System.out.println(percent + "%; Time: " + LocalTime.now());
         }
-        System.out.println("100%; Time: " + LocalTime.now());
+        LocalTime end = LocalTime.now();
+        System.out.println("100%; Time: " + end);
+        System.out.println("Time to finish: " + (end.toSecondOfDay() - start.toSecondOfDay()) + " second(s)");
         File file = new File("out\\production\\RayTracing\\img\\test.png");
         try
         {

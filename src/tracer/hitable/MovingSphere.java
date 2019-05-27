@@ -31,4 +31,20 @@ public class MovingSphere extends Sphere {
         setCenter(moving_center(r.getTime()));
         return super.hit(r, t_min, t_max, rec);
     }
+
+    @Override
+    public boolean bounding_box(double t0, double t1, AABB box)
+    {
+        AABB box0 = new AABB();
+        AABB box1 = new AABB();
+
+        setCenter(moving_center(t0));
+        super.bounding_box(t0, t1, box0);
+
+        setCenter(moving_center(t1));
+        super.bounding_box(t0, t1, box1);
+
+        AABB.surrounding_box(box0, box1, box);
+        return true;
+    }
 }

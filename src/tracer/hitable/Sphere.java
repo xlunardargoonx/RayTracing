@@ -73,4 +73,13 @@ public class Sphere extends Hitable
         }
         return false;
     }
+
+    @Override
+    public boolean bounding_box(double t0, double t1, AABB box)
+    {
+        Vector3 v = new Vector3(radius, radius, radius);
+        box.setMin(center.subtractVec(v));
+        box.setMax(center.addVec(v));
+        return true;
+    }
 }
