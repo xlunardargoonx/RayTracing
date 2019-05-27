@@ -56,6 +56,7 @@ public class Dielectric extends Material
             scattered.setA(rec.getP());
             scattered.setB(refracted);
         }
+        scattered.setTime(r_in.getTime());
         return true;
     }
 

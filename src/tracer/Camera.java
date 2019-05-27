@@ -10,6 +10,8 @@ public class Camera
     Vector3 vertical;
     Vector3 u,v,w;
     double lens_radius;
+    //added t0 and t1 for timing
+    double time0, time1;
 
     static Random randG = new Random(42);
 
@@ -29,8 +31,10 @@ public class Camera
         this.vertical = new Vector3(0, 2, 0);
     }
 
-    public Camera(Vector3 lookfrom, Vector3 lookat, Vector3 vup, double vfov, double aspect, double aperature, double focus_dist)
+    public Camera(Vector3 lookfrom, Vector3 lookat, Vector3 vup, double vfov, double aspect, double aperature, double focus_dist, double t0, double t1)
     {
+        time0 = t0;
+        time1 = t1;
         lens_radius = aperature / 2.0;
         double theta = vfov * Math.PI /180;
         double half_height = Math.tan(theta/2);
@@ -52,10 +56,11 @@ public class Camera
         Vector3 rd = random_in_unit_disk().multiplyConst(lens_radius);
         Vector3 offset = u.multiplyConst(rd.x())
                           .addVec(v.multiplyConst(rd.y()));
+        double time = time0 + randG.nextDouble() * (time1 - time0);
         return new Ray(origin.addVec(offset), lower_left_corner.addVec(horizontal.multiplyConst(s))
                                                 .addVec(vertical.multiplyConst(t))
                                                 .subtractVec(origin)
-                                                .subtractVec(offset));
+                                                .subtractVec(offset), time);
     }
 
     public Vector3 random_in_unit_disk()

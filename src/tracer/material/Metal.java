@@ -38,6 +38,7 @@ public class Metal extends Material
         Vector3 reflected = reflect(Vector3.unit_vec(r_in.direction()), rec.getNormal());
         scattered.setA(rec.getP());
         scattered.setB(reflected.addVec(randomInUnitSphere().multiplyConst(fuzz)));
+        scattered.setTime(r_in.getTime());
         attenuation.copyValue(albedo);
         return (scattered.direction().dot(rec.getNormal()) > 0);
     }

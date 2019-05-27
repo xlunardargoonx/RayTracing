@@ -41,6 +41,7 @@ public class SimpleTest {
 
     public static void main(String[] args)
     {
+        System.out.println(1.0/0.0);
         int nx = 200;//3840;//1280;//3840;//1920;//200;
         int ny = 100;//2160;//720;//2160;//1080;//100;
         int ns = 100;
@@ -49,8 +50,13 @@ public class SimpleTest {
         double dist_to_focus = lookfrom.subtractVec(lookat).length();//10.0;
         double aperture = 0.25;
 
-        Camera cam = new Camera(lookfrom, lookat, new Vector3(0,1,0), 20, ((double)nx)/(double)ny, aperture, dist_to_focus);
+        Camera cam = new Camera(lookfrom, lookat, new Vector3(0,1,0), 20.0, ((double)nx)/(double)ny, aperture, dist_to_focus, 0.0, 1.0);
 //        HitableList world = new HitableList();
+//        world.addHitable(new MovingSphere(new Vector3(4, 1, 0), new Vector3(4, 1.0 + 0.5 /*+ rand.nextDouble()*/, 0), 1.0,
+//                new Lambertian(new Vector3(0.1, 0.2, 0.5)), 0.0, 1.0));
+//        world.addHitable(new MovingSphere(new Vector3(-12, 0, 2), new Vector3(-12, 1.5 /*+ rand.nextDouble()*/, 2), 0.5,
+//                new Lambertian(new Vector3(0.8, 0.8, 0.0)), 0.0, 1.0));
+//        world.addHitable(new Sphere(new Vector3(0, -1000, 0),1000, new Lambertian(new Vector3(0.5, 0.5, 0.5))));
 //        world.addHitable(new Sphere(new Vector3(0, 0, -1), 0.5, new Lambertian(new Vector3(0.1, 0.2, 0.5))));
 //        world.addHitable(new Sphere(new Vector3(0, -100.5, -1), 100, new Lambertian(new Vector3(0.8, 0.8, 0.0))));
 //        world.addHitable(new Sphere(new Vector3(1,0,-1), 0.5, new Metal(new Vector3(0.8, 0.6, 0.2), 0.0)));
@@ -96,17 +102,13 @@ public class SimpleTest {
                 argb ^= ib;
 
                 bufferedImage.setRGB(i, ny-j-1, argb);
-//                System.out.println(ir + " " + ig + " " + ib);
-//                System.out.printf("\n%h %h %h\n", ir, ig, ib);
-//                System.out.printf("%h\n", argb);
-//                System.out.printf("%h\n", bufferedImage.getRGB(i,ny-j-1));
             }
             double percent = ((double)j) /** ((double)i)*/ / ((double)ny) /*/ ((double)nx)*/ * 100.0;
             if(percent >= 10 && percent % 10 == 0)
                 System.out.println(percent + "%; Time: " + LocalTime.now());
         }
         System.out.println("100%; Time: " + LocalTime.now());
-        File file = new File("C:\\Users\\PHO\\IdeaProjects\\RayTracing\\out\\production\\RayTracing\\img\\test.png");
+        File file = new File("out\\production\\RayTracing\\img\\test.png");
         try
         {
             ImageIO.write(bufferedImage, "png", file);
@@ -136,10 +138,14 @@ public class SimpleTest {
                 {
                     if(choose_mat < 0.8) //choose diffuse
                     {
+//                        list.addHitable(new MovingSphere(center, center.addVec(new Vector3(0, 0.5 /*+ rand.nextDouble()*/, 0)), 0.2,
+//                                new Lambertian(new Vector3(rand.nextDouble() * rand.nextDouble(),
+//                                                           rand.nextDouble() * rand.nextDouble(),
+//                                                           rand.nextDouble() * rand.nextDouble())), 0.0, 1.0));
                         list.addHitable(new Sphere(center, 0.2,
                                 new Lambertian(new Vector3(rand.nextDouble() * rand.nextDouble(),
-                                                           rand.nextDouble() * rand.nextDouble(),
-                                                           rand.nextDouble() * rand.nextDouble()))));
+                                        rand.nextDouble() * rand.nextDouble(),
+                                        rand.nextDouble() * rand.nextDouble()))));
                     }
                     else if(choose_mat < 0.95) //choose metal
                     {

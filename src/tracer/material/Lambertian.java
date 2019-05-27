@@ -30,6 +30,7 @@ public class Lambertian extends Material
         Vector3 target = rec.getP().addVec(rec.getNormal()).addVec(randomInUnitSphere());
         scattered.setA(rec.getP());
         scattered.setB(target.subtractVec(rec.getP()));
+        scattered.setTime(r_in.getTime());
         attenuation.copyValue(albedo);
         return true;
     }
