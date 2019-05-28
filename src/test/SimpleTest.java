@@ -5,6 +5,7 @@ import tracer.hitable.*;
 import tracer.material.*;
 import tracer.texture.CheckerTexture;
 import tracer.texture.ConstantTexture;
+import tracer.texture.NoiseTexture;
 import tracer.texture.Texture;
 
 import javax.imageio.ImageIO;
@@ -70,7 +71,8 @@ public class SimpleTest {
 
         //Hitable world = random_scene();
         //world = new BVH_node(((HitableList)world).getHitList(), 0, 1);
-        Hitable world = two_spheres();
+        //Hitable world = two_spheres();
+        Hitable world = two_perlin_spheres();
 
 //        List<Hitable> list = new ArrayList<>();
 //        list.add(new Sphere(new Vector3(0, 0, 0), 1, new Dielectric(1.5)));
@@ -192,6 +194,16 @@ public class SimpleTest {
         HitableList list = new HitableList();
         list.addHitable(new Sphere(new Vector3(0, -10, 0), 10, new Lambertian(checker)));
         list.addHitable(new Sphere(new Vector3(0, 10, 0), 10, new Lambertian(checker)));
+        return list;
+    }
+
+    public static Hitable two_perlin_spheres()
+    {
+        //Texture pertext = new NoiseTexture();
+        Texture pertext = new NoiseTexture(3);
+        HitableList list = new HitableList();
+        list.addHitable(new Sphere(new Vector3(0, -1000, 0), 1000, new Lambertian(pertext)));
+        list.addHitable(new Sphere(new Vector3(0, 2, 0), 2, new Lambertian(pertext)));
         return list;
     }
 
