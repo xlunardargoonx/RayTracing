@@ -3,18 +3,19 @@ package tracer.material;
 import tracer.HitRecord;
 import tracer.Ray;
 import tracer.Vector3;
+import tracer.texture.Texture;
 
 public class Metal extends Material
 {
-    private Vector3 albedo;
+    private Texture albedo;
     private double fuzz;
 
-    public Metal(Vector3 albedo) {
+    public Metal(Texture albedo) {
         this.albedo = albedo;
         this.fuzz = 0;
     }
 
-    public Metal(Vector3 albedo, double fuzz)
+    public Metal(Texture albedo, double fuzz)
     {
         super();
         this.albedo = albedo;
@@ -22,12 +23,12 @@ public class Metal extends Material
         else this.fuzz = 1;
     }
 
-    public Vector3 getAlbedo()
+    public Texture getAlbedo()
     {
         return albedo;
     }
 
-    public void setAlbedo(Vector3 albedo)
+    public void setAlbedo(Texture albedo)
     {
         this.albedo = albedo;
     }
@@ -39,7 +40,7 @@ public class Metal extends Material
         scattered.setA(rec.getP());
         scattered.setB(reflected.addVec(randomInUnitSphere().multiplyConst(fuzz)));
         scattered.setTime(r_in.getTime());
-        attenuation.copyValue(albedo);
+        attenuation.copyValue(albedo.value(0,0, rec.getP()));
         return (scattered.direction().dot(rec.getNormal()) > 0);
     }
 }

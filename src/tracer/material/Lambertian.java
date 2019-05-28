@@ -3,23 +3,24 @@ package tracer.material;
 import tracer.HitRecord;
 import tracer.Ray;
 import tracer.Vector3;
+import tracer.texture.Texture;
 
 public class Lambertian extends Material
 {
-    private Vector3 albedo;
+    private Texture albedo;
 
-    public Lambertian(Vector3 albedo)
+    public Lambertian(Texture albedo)
     {
         super();
         this.albedo = albedo;
     }
 
-    public Vector3 getAlbedo()
+    public Texture getAlbedo()
     {
         return albedo;
     }
 
-    public void setAlbedo(Vector3 albedo)
+    public void setAlbedo(Texture albedo)
     {
         this.albedo = albedo;
     }
@@ -31,7 +32,7 @@ public class Lambertian extends Material
         scattered.setA(rec.getP());
         scattered.setB(target.subtractVec(rec.getP()));
         scattered.setTime(r_in.getTime());
-        attenuation.copyValue(albedo);
+        attenuation.copyValue(albedo.value(0,0, rec.getP()));
         return true;
     }
 
