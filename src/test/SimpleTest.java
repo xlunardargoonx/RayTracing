@@ -3,12 +3,14 @@ package test;
 import tracer.*;
 import tracer.hitable.*;
 import tracer.material.*;
+import tracer.texture.CheckerTexture;
+import tracer.texture.ConstantTexture;
+import tracer.texture.Texture;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +54,8 @@ public class SimpleTest {
         double dist_to_focus = lookfrom.subtractVec(lookat).length();//10.0;
         double aperture = 0.25;
 
-        Camera cam = new Camera(lookfrom, lookat, new Vector3(0,1,0), 20.0, ((double)nx)/(double)ny, aperture, dist_to_focus, 0.0, 1.0);
+        //Camera cam = new Camera(lookfrom, lookat, new Vector3(0,1,0), 20.0, ((double)nx)/(double)ny, aperture, dist_to_focus, 0.0, 1.0);
+        Camera cam = cam_for_two_spheres(nx, ny);
 //        HitableList world = new HitableList();
 //        world.addHitable(new MovingSphere(new Vector3(4, 1, 0), new Vector3(4, 1.0 + 0.5 /*+ rand.nextDouble()*/, 0), 1.0,
 //                new Lambertian(new Vector3(0.1, 0.2, 0.5)), 0.0, 1.0));
@@ -65,8 +68,9 @@ public class SimpleTest {
 //        world.addHitable(new Sphere(new Vector3(-1, 0, -1), 0.5, new Dielectric(1.5)));
 //        world.addHitable(new Sphere(new Vector3(-1, 0, -1), -0.45, new Dielectric(1.5)));
 
-        Hitable world = random_scene();
-        world = new BVH_node(((HitableList)world).getHitList(), 0, 1);
+        //Hitable world = random_scene();
+        //world = new BVH_node(((HitableList)world).getHitList(), 0, 1);
+        Hitable world = two_spheres();
 
 //        List<Hitable> list = new ArrayList<>();
 //        list.add(new Sphere(new Vector3(0, 0, 0), 1, new Dielectric(1.5)));
@@ -135,7 +139,8 @@ public class SimpleTest {
         Random rand = new Random(42);
         int n = 500;
         HitableList list = new HitableList();
-        list.addHitable(new Sphere(new Vector3(0, -1000, 0),1000, new Lambertian(new Vector3(0.5, 0.5, 0.5))));
+        Texture checker = new CheckerTexture(new ConstantTexture(new Vector3(0.2, 0.3, 0.1)), new ConstantTexture(new Vector3(0.9, 0.9, 0.9)));
+        list.addHitable(new Sphere(new Vector3(0, -1000, 0),1000, new Lambertian(checker)));//new ConstantTexture(new Vector3(0.5, 0.5, 0.5)))));
         Vector3 temp = new Vector3(4, 0.2, 0);
 
         for(int a = -11; a < 11; a++)
@@ -154,16 +159,16 @@ public class SimpleTest {
 //                                                           rand.nextDouble() * rand.nextDouble(),
 //                                                           rand.nextDouble() * rand.nextDouble())), 0.0, 1.0));
                         list.addHitable(new Sphere(center, 0.2,
-                                new Lambertian(new Vector3(rand.nextDouble() * rand.nextDouble(),
-                                        rand.nextDouble() * rand.nextDouble(),
-                                        rand.nextDouble() * rand.nextDouble()))));
+                                new Lambertian(new ConstantTexture(new Vector3(rand.nextDouble() * rand.nextDouble(),
+                                                                               rand.nextDouble() * rand.nextDouble(),
+                                                                               rand.nextDouble() * rand.nextDouble())))));
                     }
                     else if(choose_mat < 0.95) //choose metal
                     {
                         list.addHitable(new Sphere(center, 0.2,
-                                new Metal(new Vector3(0.5 * (1+rand.nextDouble()),
-                                                      0.5 * (1+rand.nextDouble()),
-                                                      0.5 * (1+rand.nextDouble())),
+                                new Metal(new ConstantTexture(new Vector3(0.5 * (1+rand.nextDouble()),
+                                                                          0.5 * (1+rand.nextDouble()),
+                                                                          0.5 * (1+rand.nextDouble()))),
                                         0.5 * rand.nextDouble())));
                     }
                     else //choose glass
@@ -175,8 +180,27 @@ public class SimpleTest {
         }
 
         list.addHitable(new Sphere(new Vector3(0, 1, 0), 1.0, new Dielectric(1.5)));
-        list.addHitable(new Sphere(new Vector3(-4, 1, 0), 1.0, new Lambertian(new Vector3(0.4, 0.2, 0.1))));
-        list.addHitable(new Sphere(new Vector3(4, 1, 0), 1.0, new Metal(new Vector3(0.7, 0.6, 0.5), 0.0)));
+        list.addHitable(new Sphere(new Vector3(-4, 1, 0), 1.0, new Lambertian(new ConstantTexture(new Vector3(0.4, 0.2, 0.1)))));
+        list.addHitable(new Sphere(new Vector3(4, 1, 0), 1.0, new Metal(new ConstantTexture(new Vector3(0.7, 0.6, 0.5)), 0.0)));
         return list;
+    }
+
+    public static Hitable two_spheres()
+    {
+        Texture checker = new CheckerTexture(new ConstantTexture(new Vector3(0.2, 0.3, 0.1)),
+                                             new ConstantTexture(new Vector3(0.9, 0.9, 0.9)));
+        HitableList list = new HitableList();
+        list.addHitable(new Sphere(new Vector3(0, -10, 0), 10, new Lambertian(checker)));
+        list.addHitable(new Sphere(new Vector3(0, 10, 0), 10, new Lambertian(checker)));
+        return list;
+    }
+
+    public static Camera cam_for_two_spheres(double nx, double ny)
+    {
+        Vector3 lookfrom = new Vector3(13,2,3);
+        Vector3 lookat = new Vector3(0,0,0);
+        double dist_to_focus = 10.0;
+        double aperture = 0.0;
+        return new Camera(lookfrom, lookat, new Vector3(0,1,0), 20, nx/ny, aperture, dist_to_focus);
     }
 }
