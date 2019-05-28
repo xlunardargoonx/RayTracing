@@ -35,6 +35,17 @@ public class Camera
     {
         time0 = t0;
         time1 = t1;
+        calculate_camera(lookfrom, lookat, vup, vfov, aspect, aperature, focus_dist);
+    }
+
+    public Camera(Vector3 lookfrom, Vector3 lookat, Vector3 vup, double vfov, double aspect, double aperature, double focus_dist)
+    {
+        time0 = time1 = 0;
+        calculate_camera(lookfrom, lookat, vup, vfov, aspect, aperature, focus_dist);
+    }
+
+    private void calculate_camera(Vector3 lookfrom, Vector3 lookat, Vector3 vup, double vfov, double aspect, double aperature, double focus_dist)
+    {
         lens_radius = aperature / 2.0;
         double theta = vfov * Math.PI /180;
         double half_height = Math.tan(theta/2);
@@ -45,8 +56,8 @@ public class Camera
         u = Vector3.unit_vec(vup.cross(w));
         v = w.cross(u);
         lower_left_corner = origin.subtractVec(u.multiplyConst(half_width*focus_dist))
-                                  .subtractVec(v.multiplyConst(half_height*focus_dist))
-                                  .subtractVec(w.multiplyConst(focus_dist));
+                .subtractVec(v.multiplyConst(half_height*focus_dist))
+                .subtractVec(w.multiplyConst(focus_dist));
         horizontal = u.multiplyConst(2*half_width*focus_dist);
         vertical = v.multiplyConst(2*half_height*focus_dist);
     }
