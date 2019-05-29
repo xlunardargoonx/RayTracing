@@ -47,8 +47,8 @@ public class SimpleTest {
     public static void main(String[] args)
     {
         //System.out.println(1.0/0.0);
-        int nx = 1280;//3840;//1280;//3840;//1920;//200;
-        int ny = 720;//2160;//720;//2160;//1080;//100;
+        int nx = 200;//1280;//3840;//1280;//3840;//1920;//200;
+        int ny = 100;//720;//2160;//720;//2160;//1080;//100;
         int ns = 100;
         Vector3 lookfrom = new Vector3(13, 2 ,3);//new Vector3(-2,2,1);//new Vector3(3,3,2);
         Vector3 lookat = new Vector3(0, 0, 0);//new Vector3(0,0,-1);
@@ -199,8 +199,8 @@ public class SimpleTest {
 
     public static Hitable two_perlin_spheres()
     {
-        //Texture pertext = new NoiseTexture();
-        Texture pertext = new NoiseTexture(3);
+        Texture pertext = new NoiseTexture();
+        //Texture pertext = new NoiseTexture(3);
         HitableList list = new HitableList();
         list.addHitable(new Sphere(new Vector3(0, -1000, 0), 1000, new Lambertian(pertext)));
         list.addHitable(new Sphere(new Vector3(0, 2, 0), 2, new Lambertian(pertext)));

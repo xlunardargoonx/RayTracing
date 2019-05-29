@@ -23,6 +23,8 @@ public class NoiseTexture extends Texture
     @Override
     public Vector3 value(double u, double v, Vector3 p)
     {
-        return new Vector3(1,1,1).multiplyConst(noise.noise(p.multiplyConst(scale)));
+        double n = noise.noise(p.multiplyConst(scale));
+        //System.out.println("noise : " + n);
+        return new Vector3(1,1,1).multiplyConst(n);
     }
 }
