@@ -23,8 +23,15 @@ public class NoiseTexture extends Texture
     @Override
     public Vector3 value(double u, double v, Vector3 p)
     {
-        double n = noise.noise(p.multiplyConst(scale));
+        //basic perlin noise
+        //double n = noise.noise(p.multiplyConst(scale));
         //System.out.println("noise : " + n);
-        return new Vector3(1,1,1).multiplyConst(n);
+        //return new Vector3(1,1,1).multiplyConst(n);
+        //perlin noise shifted up
+        //return new Vector3(1,1,1).multiplyConst((n+1)*0.5);
+        //camo turb
+        //return new Vector3(1,1,1).multiplyConst(noise.turb(p.multiplyConst(scale), 7));
+        //marble turb
+        return new Vector3(1,1,1).multiplyConst((Math.sin(noise.turb(p, 7)*10 + scale*p.z())+1)*0.5);
     }
 }
