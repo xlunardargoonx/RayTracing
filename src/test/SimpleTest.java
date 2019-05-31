@@ -3,10 +3,7 @@ package test;
 import tracer.*;
 import tracer.hitable.*;
 import tracer.material.*;
-import tracer.texture.CheckerTexture;
-import tracer.texture.ConstantTexture;
-import tracer.texture.NoiseTexture;
-import tracer.texture.Texture;
+import tracer.texture.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -47,9 +44,29 @@ public class SimpleTest {
     public static void main(String[] args)
     {
         //System.out.println(1.0/0.0);
-        int nx = 1280;//1280;//3840;//1280;//3840;//1920;//200;
-        int ny = 720;//720;//2160;//720;//2160;//1080;//100;
+        int nx = 200;//1280;//3840;//1280;//3840;//1920;//200;
+        int ny = 100;//720;//2160;//720;//2160;//1080;//100;
         int ns = 100;
+
+        BufferedImage img = null;
+        try
+        {
+            //img = ImageIO.read(new File("data/Penguins.jpg"));
+            img = ImageIO.read(new File("data/earth.jpg"));
+            //img = ImageIO.read(new File("data/blue.jpg"));
+            BufferedImage bufferedImage = new BufferedImage(img.getWidth(),img.getHeight(),BufferedImage.TYPE_INT_ARGB);
+            for(int i = 0; i < img.getWidth(); i++)
+                for(int j = 0; j < img.getHeight(); j++)
+                    bufferedImage.setRGB(i, j, img.getRGB(i,j));
+            ImageIO.write(bufferedImage, "png", new File("img\\abc.png"));
+        }
+        catch(IOException e)
+        {
+            System.out.println("no such image");
+        }
+
+        Texture earth_img = new ImageTexture(img);
+
         Vector3 lookfrom = new Vector3(13, 2 ,3);//new Vector3(-2,2,1);//new Vector3(3,3,2);
         Vector3 lookat = new Vector3(0, 0, 0);//new Vector3(0,0,-1);
         double dist_to_focus = lookfrom.subtractVec(lookat).length();//10.0;
@@ -73,6 +90,7 @@ public class SimpleTest {
         //world = new BVH_node(((HitableList)world).getHitList(), 0, 1);
         //Hitable world = two_spheres();
         Hitable world = two_perlin_spheres();
+        //Hitable world = new Sphere(new Vector3(0, 2, 0), 2, new Lambertian(earth_img));
 
 //        List<Hitable> list = new ArrayList<>();
 //        list.add(new Sphere(new Vector3(0, 0, 0), 1, new Dielectric(1.5)));
@@ -115,7 +133,6 @@ public class SimpleTest {
                 argb ^= ir << 16;
                 argb ^= ig << 8;
                 argb ^= ib;
-
                 bufferedImage.setRGB(i, ny-j-1, argb);
             }
             double percent = ((double)j) /** ((double)i)*/ / ((double)ny) /*/ ((double)nx)*/ * 100.0;
@@ -125,7 +142,7 @@ public class SimpleTest {
         LocalTime end = LocalTime.now();
         System.out.println("100%; Time: " + end);
         System.out.println("Time to finish: " + (end.toSecondOfDay() - start.toSecondOfDay()) + " second(s)");
-        File file = new File("out\\production\\RayTracing\\img\\test.png");
+        File file = new File("img\\test.png");
         try
         {
             ImageIO.write(bufferedImage, "png", file);

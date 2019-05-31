@@ -32,7 +32,7 @@ public class Lambertian extends Material
         scattered.setA(rec.getP());
         scattered.setB(target.subtractVec(rec.getP()));
         scattered.setTime(r_in.getTime());
-        attenuation.copyValue(albedo.value(0,0, rec.getP()));
+        attenuation.copyValue(albedo.value(rec.getU(), rec.getV(), rec.getP()));
         return true;
     }
 

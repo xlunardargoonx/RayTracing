@@ -50,6 +50,7 @@ public class Sphere extends Hitable
         double b = oc.dot(r.direction());
         double c = oc.dot(oc) - radius*radius;
         double discriminant = b*b - a*c;
+
         if(discriminant > 0)
         {
             double temp = (-b - Math.sqrt(discriminant)) / a;
@@ -59,6 +60,9 @@ public class Sphere extends Hitable
                 rec.setP(r.point_at_parameter(rec.getT()));
                 rec.setNormal(rec.getP().subtractVec(center).divideConst(radius));
                 rec.setMat(mat);
+                Vector3 uv = get_sphere_uv(rec.getP().subtractVec(center).divideConst(radius));
+                rec.setU(uv.x());
+                rec.setV(uv.y());
                 return true;
             }
             temp = (-b + Math.sqrt(discriminant))/a;
@@ -68,6 +72,9 @@ public class Sphere extends Hitable
                 rec.setP(r.point_at_parameter(rec.getT()));
                 rec.setNormal(rec.getP().subtractVec(center).divideConst(radius));
                 rec.setMat(mat);
+                Vector3 uv = get_sphere_uv(rec.getP().subtractVec(center).divideConst(radius));
+                rec.setU(uv.x());
+                rec.setV(uv.y());
                 return true;
             }
         }
@@ -81,5 +88,17 @@ public class Sphere extends Hitable
         box.setMin(center.subtractVec(v));
         box.setMax(center.addVec(v));
         return true;
+    }
+
+    /* return a vector that contain value of u and v
+     *  u will be the first and v will be the 2nd
+     * */
+    public Vector3 get_sphere_uv(Vector3 p)
+    {
+        double phi = Math.atan2(p.z(),p.x());
+        double theta = Math.asin(p.y());
+        double u = 1-(phi + Math.PI) / (2*Math.PI);
+        double v = (theta + Math.PI/2) / Math.PI;
+        return new Vector3(u, v, 0);
     }
 }
