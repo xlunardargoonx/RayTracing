@@ -76,7 +76,8 @@ public class SimpleTest {
 
         //Camera cam = new Camera(lookfrom, lookat, new Vector3(0,1,0), 20.0, ((double)nx)/(double)ny, aperture, dist_to_focus, 0.0, 1.0);
         //Camera cam = cam_for_two_spheres(nx, ny);
-        Camera cam = cam_for_light(nx, ny);
+        //Camera cam = cam_for_light(nx, ny);
+        Camera cam = cam_for_cornell_box(nx, ny);
 //        HitableList world = new HitableList();
 //        world.addHitable(new MovingSphere(new Vector3(4, 1, 0), new Vector3(4, 1.0 + 0.5 /*+ rand.nextDouble()*/, 0), 1.0,
 //                new Lambertian(new Vector3(0.1, 0.2, 0.5)), 0.0, 1.0));
@@ -93,7 +94,8 @@ public class SimpleTest {
         //world = new BVH_node(((HitableList)world).getHitList(), 0, 1);
         //Hitable world = two_spheres();
         //Hitable world = two_perlin_spheres();
-        Hitable world = simple_light();
+        //Hitable world = simple_light();
+        Hitable world = cornell_box();
         //Hitable world = new Sphere(new Vector3(0, 2, 0), 2, new Lambertian(earth_img));
 
 //        List<Hitable> list = new ArrayList<>();
@@ -240,6 +242,23 @@ public class SimpleTest {
         return list;
     }
 
+    public static Hitable cornell_box()
+    {
+        HitableList list = new HitableList();
+        Material red = new Lambertian(new ConstantTexture(new Vector3(0.65, 0.05, 0.05)));
+        Material white = new Lambertian(new ConstantTexture(new Vector3(0.73, 0.73, 0.73)));
+        Material green = new Lambertian(new ConstantTexture(new Vector3(0.12, 0.45, 0.15)));
+        Material light = new DiffuseLight(new ConstantTexture(new Vector3(15, 15, 15)));
+        list.addHitable(new FlipNormals(new YZRect(0, 555, 0, 555, 555, green)));
+        list.addHitable(new YZRect(0, 555, 0, 555, 0, red));
+        list.addHitable(new XZRect(213, 343, 227, 332, 554, light));
+        //list.addHitable(new FlipNormals(new XZRect(213, 343, 227, 332, 554, light)));
+        list.addHitable(new FlipNormals(new XZRect(0, 555, 0, 555, 555, white)));
+        list.addHitable(new XZRect(0, 555, 0, 555, 0, white));
+        list.addHitable(new FlipNormals(new XYRect(0, 555, 0, 555, 555, white)));
+        return list;
+    }
+
     public static Camera cam_for_two_spheres(double nx, double ny)
     {
         Vector3 lookfrom = new Vector3(13,2,3);
@@ -256,5 +275,14 @@ public class SimpleTest {
         double dist_to_focus = 10.0;
         double aperture = 0.0;
         return new Camera(lookfrom, lookat, new Vector3(0,1,0), 20, nx/ny, aperture, dist_to_focus);
+    }
+
+    public static Camera cam_for_cornell_box(double nx, double ny)
+    {
+        Vector3 lookfrom = new Vector3(278,278,-800);
+        Vector3 lookat = new Vector3(278,278,0);
+        double dist_to_focus = 10.0;
+        double aperture = 0.0;
+        return new Camera(lookfrom, lookat, new Vector3(0,1,0), 40, nx/ny, aperture, dist_to_focus);
     }
 }
