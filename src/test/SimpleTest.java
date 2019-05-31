@@ -256,6 +256,10 @@ public class SimpleTest {
         list.addHitable(new FlipNormals(new XZRect(0, 555, 0, 555, 555, white)));
         list.addHitable(new XZRect(0, 555, 0, 555, 0, white));
         list.addHitable(new FlipNormals(new XYRect(0, 555, 0, 555, 555, white)));
+//        list.addHitable(new Box(new Vector3(130, 0, 65), new Vector3(295, 165, 230), white));
+//        list.addHitable(new Box(new Vector3(265, 0 , 295), new Vector3(430, 330, 460), white));
+        list.addHitable(new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 165, 165), white), -18), new Vector3(130, 0, 65)));
+        list.addHitable(new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 330, 165), white), 15), new Vector3(265, 0, 295)));
         return list;
     }
 

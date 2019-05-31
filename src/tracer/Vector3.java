@@ -138,4 +138,9 @@ public class Vector3
     {
         return v.divideConst(v.length());
     }
+
+    public void set(int index, double value)
+    {
+        e[index] = value;
+    }
 }
