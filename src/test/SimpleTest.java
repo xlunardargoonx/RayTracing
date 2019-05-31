@@ -24,28 +24,30 @@ public class SimpleTest {
         {
             Ray scattered = new Ray();
             Vector3 attenuation = new Vector3();
+            Vector3 emitted = rec.getMat().emitted(rec.getU(), rec.getV(), rec.getP());
             if(depth < 50 && rec.getMat().scatter(r, rec, attenuation, scattered))
             {
-                return attenuation.multiplyVec(color(scattered,world,depth+1));
+                return attenuation.multiplyVec(color(scattered,world,depth+1)).addVec(emitted);
             }
             else
             {
-                return new Vector3(0,0,0);
+                return emitted;
             }
         }
         else
         {
-            Vector3 unit_dir = Vector3.unit_vec(r.direction());
-            double t = 0.5 * (unit_dir.y() + 1.0);
-            return new Vector3(1.0, 1.0, 1.0).multiplyConst(1.0 - t).addVec(new Vector3(0.5, 0.7, 1.0).multiplyConst(t));
+//            Vector3 unit_dir = Vector3.unit_vec(r.direction());
+//            double t = 0.5 * (unit_dir.y() + 1.0);
+//            return new Vector3(1.0, 1.0, 1.0).multiplyConst(1.0 - t).addVec(new Vector3(0.5, 0.7, 1.0).multiplyConst(t));
+            return new Vector3(0,0,0);
         }
     }
 
     public static void main(String[] args)
     {
         //System.out.println(1.0/0.0);
-        int nx = 200;//1280;//3840;//1280;//3840;//1920;//200;
-        int ny = 100;//720;//2160;//720;//2160;//1080;//100;
+        int nx = 1280;//3840;//1280;//3840;//1920;//200;
+        int ny = 720;//2160;//720;//2160;//1080;//100;
         int ns = 100;
 
         BufferedImage img = null;
@@ -73,7 +75,8 @@ public class SimpleTest {
         double aperture = 0.25;
 
         //Camera cam = new Camera(lookfrom, lookat, new Vector3(0,1,0), 20.0, ((double)nx)/(double)ny, aperture, dist_to_focus, 0.0, 1.0);
-        Camera cam = cam_for_two_spheres(nx, ny);
+        //Camera cam = cam_for_two_spheres(nx, ny);
+        Camera cam = cam_for_light(nx, ny);
 //        HitableList world = new HitableList();
 //        world.addHitable(new MovingSphere(new Vector3(4, 1, 0), new Vector3(4, 1.0 + 0.5 /*+ rand.nextDouble()*/, 0), 1.0,
 //                new Lambertian(new Vector3(0.1, 0.2, 0.5)), 0.0, 1.0));
@@ -89,7 +92,8 @@ public class SimpleTest {
         //Hitable world = random_scene();
         //world = new BVH_node(((HitableList)world).getHitList(), 0, 1);
         //Hitable world = two_spheres();
-        Hitable world = two_perlin_spheres();
+        //Hitable world = two_perlin_spheres();
+        Hitable world = simple_light();
         //Hitable world = new Sphere(new Vector3(0, 2, 0), 2, new Lambertian(earth_img));
 
 //        List<Hitable> list = new ArrayList<>();
@@ -224,10 +228,31 @@ public class SimpleTest {
         return list;
     }
 
+    public static Hitable simple_light()
+    {
+        //Texture pertext = new NoiseTexture();
+        Texture pertext = new NoiseTexture(6.66);
+        HitableList list = new HitableList();
+        list.addHitable(new Sphere(new Vector3(0, -1000, 0), 1000, new Lambertian(pertext)));
+        list.addHitable(new Sphere(new Vector3(0, 2, 0), 2, new Lambertian(pertext)));
+        list.addHitable(new Sphere(new Vector3(0, 7, 0), 2, new DiffuseLight(new ConstantTexture(new Vector3(4,4,4)))));
+        list.addHitable(new XYRect(3,5,1,3,-2, new DiffuseLight(new ConstantTexture(new Vector3(4,4,4)))));
+        return list;
+    }
+
     public static Camera cam_for_two_spheres(double nx, double ny)
     {
         Vector3 lookfrom = new Vector3(13,2,3);
         Vector3 lookat = new Vector3(0,0,0);
+        double dist_to_focus = 10.0;
+        double aperture = 0.0;
+        return new Camera(lookfrom, lookat, new Vector3(0,1,0), 20, nx/ny, aperture, dist_to_focus);
+    }
+
+    public static Camera cam_for_light(double nx, double ny)
+    {
+        Vector3 lookfrom = new Vector3(19,2,3);
+        Vector3 lookat = new Vector3(0,2,0);
         double dist_to_focus = 10.0;
         double aperture = 0.0;
         return new Camera(lookfrom, lookat, new Vector3(0,1,0), 20, nx/ny, aperture, dist_to_focus);
