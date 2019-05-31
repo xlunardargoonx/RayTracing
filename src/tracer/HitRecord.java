@@ -8,6 +8,7 @@ public class HitRecord
     Vector3 p;
     Vector3 normal;
     Material mat;
+    double u,v;
 
     public HitRecord()
     {
@@ -30,6 +31,22 @@ public class HitRecord
         this.p = h.p;
         this.normal = h.normal;
         this.mat = h.mat;
+    }
+
+    public double getU() {
+        return u;
+    }
+
+    public void setU(double u) {
+        this.u = u;
+    }
+
+    public double getV() {
+        return v;
+    }
+
+    public void setV(double v) {
+        this.v = v;
     }
 
     public double getT()
