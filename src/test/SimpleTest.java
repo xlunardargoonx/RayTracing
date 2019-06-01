@@ -95,7 +95,8 @@ public class SimpleTest {
         //Hitable world = two_spheres();
         //Hitable world = two_perlin_spheres();
         //Hitable world = simple_light();
-        Hitable world = cornell_box();
+        //Hitable world = cornell_box();
+        Hitable world = smoke_cornell_box();
         //Hitable world = new Sphere(new Vector3(0, 2, 0), 2, new Lambertian(earth_img));
 
 //        List<Hitable> list = new ArrayList<>();
@@ -260,6 +261,26 @@ public class SimpleTest {
 //        list.addHitable(new Box(new Vector3(265, 0 , 295), new Vector3(430, 330, 460), white));
         list.addHitable(new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 165, 165), white), -18), new Vector3(130, 0, 65)));
         list.addHitable(new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 330, 165), white), 15), new Vector3(265, 0, 295)));
+        return list;
+    }
+
+    public static Hitable smoke_cornell_box()
+    {
+        HitableList list = new HitableList();
+        Material red = new Lambertian(new ConstantTexture(new Vector3(0.65, 0.05, 0.05)));
+        Material white = new Lambertian(new ConstantTexture(new Vector3(0.73, 0.73, 0.73)));
+        Material green = new Lambertian(new ConstantTexture(new Vector3(0.12, 0.45, 0.15)));
+        Material light = new DiffuseLight(new ConstantTexture(new Vector3(15, 15, 15)));
+        list.addHitable(new FlipNormals(new YZRect(0, 555, 0, 555, 555, green)));
+        list.addHitable(new YZRect(0, 555, 0, 555, 0, red));
+        list.addHitable(new XZRect(213, 343, 227, 332, 554, light));
+        list.addHitable(new FlipNormals(new XZRect(0, 555, 0, 555, 555, white)));
+        list.addHitable(new XZRect(0, 555, 0, 555, 0, white));
+        list.addHitable(new FlipNormals(new XYRect(0, 555, 0, 555, 555, white)));
+        Hitable box1 = new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 165, 165), white), -18), new Vector3(130, 0, 65));
+        Hitable box2 = new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 330, 165), white), 15), new Vector3(265, 0, 295));
+        list.addHitable(new ConstantMedium(box1, 0.01, new ConstantTexture(new Vector3(1,1,1))));
+        list.addHitable(new ConstantMedium(box2, 0.01, new ConstantTexture(new Vector3(0,0,0))));
         return list;
     }
 
