@@ -19,6 +19,7 @@ public class SimpleTest {
     public static Vector3 color(Ray r, Hitable world, int depth)
     {
         HitRecord rec = new HitRecord();
+        //System.out.println("depth: " + depth);
         //changing min from 0.0 to 0.001 to get rid of shadow acne
         if(world.hit(r, 0.001, Double.MAX_VALUE, rec))
         {
@@ -131,9 +132,17 @@ public class SimpleTest {
                 //gamma corrected "gamma 2" = square root = raise to 1/gamma
                 //better gamma 2.2
                 col = new Vector3(Math.pow(col.r(),1/2.2), Math.pow(col.g(), 1/2.2), Math.pow(col.b(), 1/2.2));
-                int ir = (int)(255.99*col.r());
-                int ig = (int)(255.99*col.g());
-                int ib = (int)(255.99*col.b());
+//                if(col.r() > 1.0 || col.g() > 1.0 || col.b() > 1.0)
+//                    System.out.println("r g b: " + col.r() + " " + col.g() + " " + col.b());
+                if(col.r() < 0.0) col.set(0, 0.0);
+                else if(col.r() > 1.0) col.set(0, 1.0);
+                if(col.g() < 0.0) col.set(1, 0.0);
+                else if(col.g() > 1.0) col.set(1, 1.0);
+                if(col.b() < 0.0) col.set(2, 0.0);
+                else if(col.b() > 1.0) col.set(2, 1.0);
+                int ir = (int)(254.99*col.r());
+                int ig = (int)(254.99*col.g());
+                int ib = (int)(254.99*col.b());
 
                 int argb = 255;
                 argb = argb << 24;
@@ -240,6 +249,7 @@ public class SimpleTest {
         list.addHitable(new Sphere(new Vector3(0, 2, 0), 2, new Lambertian(pertext)));
         list.addHitable(new Sphere(new Vector3(0, 7, 0), 2, new DiffuseLight(new ConstantTexture(new Vector3(4,4,4)))));
         list.addHitable(new XYRect(3,5,1,3,-2, new DiffuseLight(new ConstantTexture(new Vector3(4,4,4)))));
+        //list.addHitable(new XZRect(4,6,0,2,5, new DiffuseLight(new ConstantTexture(new Vector3(4,4,4)))));
         return list;
     }
 
