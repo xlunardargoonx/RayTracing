@@ -65,11 +65,11 @@ public class ImageTexture extends Texture
 //        double b = (int)(data[3*i + 3*nx*j+2]) / 255.0;
         int argb = img.getRGB(i,j);
         double r,g,b;
-        b = (argb & 0xFF)/256.0;
+        b = (argb & 0xFF)/255.0;
         argb = argb >> 8;
-        g = (argb & 0xFF)/256.0;
+        g = (argb & 0xFF)/255.0;
         argb = argb >> 8;
-        r = (argb & 0xFF)/256.0;
+        r = (argb & 0xFF)/255.0;
         //System.out.printf("%x, %x, %x, %x\n", img.getRGB(i,j), r, g, b);
         return new Vector3(r,g,b);
     }

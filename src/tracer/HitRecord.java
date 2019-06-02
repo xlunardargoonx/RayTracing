@@ -93,5 +93,7 @@ public class HitRecord
         this.setT(r.t);
         this.setNormal(r.normal);
         this.setMat(r.mat);
+        this.setU(r.getU());
+        this.setV(r.getV());
     }
 }

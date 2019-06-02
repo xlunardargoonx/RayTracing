@@ -16,6 +16,8 @@ import java.util.Random;
 
 public class SimpleTest {
 
+    static Random rand = new Random(42);
+
     public static Vector3 color(Ray r, Hitable world, int depth)
     {
         HitRecord rec = new HitRecord();
@@ -47,28 +49,28 @@ public class SimpleTest {
     public static void main(String[] args)
     {
         //System.out.println(1.0/0.0);
-        int nx = 1280;//3840;//1280;//3840;//1920;//200;
-        int ny = 720;//2160;//720;//2160;//1080;//100;
-        int ns = 100;
+        int nx = 800;//1280;//400;//1280;//3840;//1280;//3840;//1920;//200;
+        int ny = 800;//720;//300;//720;//2160;//720;//2160;//1080;//100;
+        int ns = 10;
 
-        BufferedImage img = null;
-        try
-        {
-            //img = ImageIO.read(new File("data/Penguins.jpg"));
-            img = ImageIO.read(new File("data/earth.jpg"));
-            //img = ImageIO.read(new File("data/blue.jpg"));
-            BufferedImage bufferedImage = new BufferedImage(img.getWidth(),img.getHeight(),BufferedImage.TYPE_INT_ARGB);
-            for(int i = 0; i < img.getWidth(); i++)
-                for(int j = 0; j < img.getHeight(); j++)
-                    bufferedImage.setRGB(i, j, img.getRGB(i,j));
-            ImageIO.write(bufferedImage, "png", new File("img\\abc.png"));
-        }
-        catch(IOException e)
-        {
-            System.out.println("no such image");
-        }
-
-        Texture earth_img = new ImageTexture(img);
+//        BufferedImage img = null;
+//        try
+//        {
+//            //img = ImageIO.read(new File("data/Penguins.jpg"));
+//            img = ImageIO.read(new File("data/earth.jpg"));
+//            //img = ImageIO.read(new File("data/blue.jpg"));
+//            BufferedImage bufferedImage = new BufferedImage(img.getWidth(),img.getHeight(),BufferedImage.TYPE_INT_ARGB);
+//            for(int i = 0; i < img.getWidth(); i++)
+//                for(int j = 0; j < img.getHeight(); j++)
+//                    bufferedImage.setRGB(i, j, img.getRGB(i,j));
+//            ImageIO.write(bufferedImage, "png", new File("img\\abc.png"));
+//        }
+//        catch(IOException e)
+//        {
+//            System.out.println("no such image");
+//        }
+//
+//        Texture earth_img = new ImageTexture(img);
 
         Vector3 lookfrom = new Vector3(13, 2 ,3);//new Vector3(-2,2,1);//new Vector3(3,3,2);
         Vector3 lookat = new Vector3(0, 0, 0);//new Vector3(0,0,-1);
@@ -78,7 +80,8 @@ public class SimpleTest {
         //Camera cam = new Camera(lookfrom, lookat, new Vector3(0,1,0), 20.0, ((double)nx)/(double)ny, aperture, dist_to_focus, 0.0, 1.0);
         //Camera cam = cam_for_two_spheres(nx, ny);
         //Camera cam = cam_for_light(nx, ny);
-        Camera cam = cam_for_cornell_box(nx, ny);
+        //Camera cam = cam_for_cornell_box(nx, ny);
+        Camera cam = cam_for_final(nx, ny);
 //        HitableList world = new HitableList();
 //        world.addHitable(new MovingSphere(new Vector3(4, 1, 0), new Vector3(4, 1.0 + 0.5 /*+ rand.nextDouble()*/, 0), 1.0,
 //                new Lambertian(new Vector3(0.1, 0.2, 0.5)), 0.0, 1.0));
@@ -97,7 +100,8 @@ public class SimpleTest {
         //Hitable world = two_perlin_spheres();
         //Hitable world = simple_light();
         //Hitable world = cornell_box();
-        Hitable world = smoke_cornell_box();
+        //Hitable world = smoke_cornell_box();
+        Hitable world = final_scene();
         //Hitable world = new Sphere(new Vector3(0, 2, 0), 2, new Lambertian(earth_img));
 
 //        List<Hitable> list = new ArrayList<>();
@@ -110,7 +114,6 @@ public class SimpleTest {
 //        world.addHitable(new Sphere(new Vector3(R,0,-1), R, new Lambertian(new Vector3(1,0,0))));
 
         BufferedImage bufferedImage = new BufferedImage(nx,ny,BufferedImage.TYPE_INT_ARGB);
-        Random rand = new Random(42);
 
         LocalTime start = LocalTime.now();
         System.out.println("0%; Time: " + LocalTime.now());
@@ -243,10 +246,20 @@ public class SimpleTest {
     public static Hitable simple_light()
     {
         //Texture pertext = new NoiseTexture();
+        BufferedImage img = null;
+        try
+        {
+            img = ImageIO.read(new File("data/colors.jpg"));
+        }
+        catch(IOException e)
+        {
+            System.out.println("no such image ... final");
+        }
+        Material emat = new Lambertian(new ImageTexture(img));
         Texture pertext = new NoiseTexture(6.66);
         HitableList list = new HitableList();
         list.addHitable(new Sphere(new Vector3(0, -1000, 0), 1000, new Lambertian(pertext)));
-        list.addHitable(new Sphere(new Vector3(0, 2, 0), 2, new Lambertian(pertext)));
+        list.addHitable(new Sphere(new Vector3(0, 2, 0), 2, emat));
         list.addHitable(new Sphere(new Vector3(0, 7, 0), 2, new DiffuseLight(new ConstantTexture(new Vector3(4,4,4)))));
         list.addHitable(new XYRect(3,5,1,3,-2, new DiffuseLight(new ConstantTexture(new Vector3(4,4,4)))));
         //list.addHitable(new XZRect(4,6,0,2,5, new DiffuseLight(new ConstantTexture(new Vector3(4,4,4)))));
@@ -280,18 +293,100 @@ public class SimpleTest {
         Material red = new Lambertian(new ConstantTexture(new Vector3(0.65, 0.05, 0.05)));
         Material white = new Lambertian(new ConstantTexture(new Vector3(0.73, 0.73, 0.73)));
         Material green = new Lambertian(new ConstantTexture(new Vector3(0.12, 0.45, 0.15)));
-        Material light = new DiffuseLight(new ConstantTexture(new Vector3(15, 15, 15)));
+        Material light = new DiffuseLight(new ConstantTexture(new Vector3(7, 7, 7)));
         list.addHitable(new FlipNormals(new YZRect(0, 555, 0, 555, 555, green)));
         list.addHitable(new YZRect(0, 555, 0, 555, 0, red));
-        list.addHitable(new XZRect(213, 343, 227, 332, 554, light));
+        list.addHitable(new XZRect(113, 443, 127, 432, 554, light));
         list.addHitable(new FlipNormals(new XZRect(0, 555, 0, 555, 555, white)));
         list.addHitable(new XZRect(0, 555, 0, 555, 0, white));
         list.addHitable(new FlipNormals(new XYRect(0, 555, 0, 555, 555, white)));
         Hitable box1 = new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 165, 165), white), -18), new Vector3(130, 0, 65));
         Hitable box2 = new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 330, 165), white), 15), new Vector3(265, 0, 295));
+//        Hitable box1 = new Box(new Vector3(130, 0, 65), new Vector3(295, 165, 230), white);
+//        Hitable box2 = new Box(new Vector3(265, 0 , 295), new Vector3(430, 330, 460), white);
+//        Hitable box1 = new FlipNormals(new XZRect(130.0, 295.0, 65.0, 230.0, 0.0, white));
+//        Hitable box2 = new FlipNormals(new XZRect(265.0, 430.0, 295.0, 460.0, 0.0, white));
         list.addHitable(new ConstantMedium(box1, 0.01, new ConstantTexture(new Vector3(1,1,1))));
         list.addHitable(new ConstantMedium(box2, 0.01, new ConstantTexture(new Vector3(0,0,0))));
+//        list.addHitable(new FlipNormals(new XZRect(130.0, 295.0, 65.0, 230.0, 0.0, white)));
+//        list.addHitable(new FlipNormals(new XZRect(265.0, 430.0, 295.0, 460.0, 0.0, white)));
+        //list.addHitable(new FlipNormals(new XZRect(0, 165, 0, 165, 0, white)));
         return list;
+    }
+
+    public static Hitable final_scene()
+    {
+        int nb = 20;
+        HitableList list = new HitableList();
+        HitableList boxList = new HitableList();
+        HitableList boxList2 = new HitableList();
+        Material white = new Lambertian(new ConstantTexture(new Vector3(0.73, 0.73, 0.73)));
+        Material ground = new Lambertian(new ConstantTexture(new Vector3(0.48, 0.83, 0.53)));
+
+        /* ground blocks */
+        for(int i = 0; i < nb; i++)
+        {
+            for(int j = 0; j < nb; j++)
+            {
+                double w = 100;
+                double x0 = -1000 + i*w;
+                double z0 = -1000 + j*w;
+                double y0 = 0;
+                double x1 = x0 + w;
+                double y1 = 100 * (rand.nextDouble() + 0.01);
+                double z1 = z0 + w;
+                boxList.addHitable(new Box(new Vector3(x0, y0, z0), new Vector3(x1, y1, z1), ground));
+            }
+        }
+
+        list.addHitable(new BVH_node(boxList.getHitList(), 0 ,1));
+
+        Material light = new DiffuseLight(new ConstantTexture(new Vector3(7,7,7)));
+        list.addHitable(new XZRect(123, 423, 147, 412, 554, light));
+
+        Vector3 center = new Vector3(400, 400, 200);
+        /* moving ball in the upper left */
+        list.addHitable(new MovingSphere(center, center.addVec(new Vector3(30,0,0)),  50, new Lambertian(new ConstantTexture(new Vector3(0.7, 0.3, 0.1))), 0, 1));
+        /* lower center glass ball */
+        list.addHitable(new Sphere(new Vector3(260, 150, 45), 50, new Dielectric(1.5)));
+        /* Metal ball on the lower right*/
+        list.addHitable(new Sphere(new Vector3(0, 150, 145), 50, new Metal(new ConstantTexture(new Vector3(0.8, 0.8, 0.9)), 10)));
+
+        /* Blue glossy ball on the lower left infront of the earth */
+        Hitable boundary = new Sphere(new Vector3(360, 150, 145), 70, new Dielectric(1.5));
+        list.addHitable(boundary);
+        list.addHitable(new ConstantMedium(boundary, 0.2, new ConstantTexture(new Vector3(0.2, 0.4, 0.9))));
+        boundary = new Sphere(new Vector3(0,0,0), 5000, new Dielectric(1.5));
+        list.addHitable(new ConstantMedium(boundary, 0.0001, new ConstantTexture(new Vector3(1.0, 1.0, 1.0))));
+
+        BufferedImage img = null;
+        try
+        {
+            img = ImageIO.read(new File("data/earth.jpg"));
+        }
+        catch(IOException e)
+        {
+            System.out.println("no such image ... final");
+        }
+        Material emat = new Lambertian(new ImageTexture(img));
+        list.addHitable(new Sphere(new Vector3(400, 200, 400), 100, emat));
+
+        Texture pertext = new NoiseTexture(0.1);
+        list.addHitable(new Sphere(new Vector3(220, 280, 300), 80, new Lambertian(pertext)));
+        //list.addHitable(new Sphere(new Vector3(220, 280, 300), 80, emat));
+        //list.addHitable(new XZRect(123, 203, 147, 227, 150, light));
+        //list.addHitable(new Sphere(new Vector3(0, 2, 0), 200, new Lambertian(pertext)));
+        //center = new Vector3(220, 280, 300);
+        //list.addHitable(new MovingSphere(center, center.addVec(new Vector3(30,0,0)),  50, new Lambertian(new ConstantTexture(new Vector3(0.7, 0.3, 0.1))), 0, 1));
+
+        int ns = 1000;
+        for(int j = 0; j < ns; j++)
+        {
+            boxList2.addHitable(new Sphere(new Vector3(165*rand.nextDouble(), 165*rand.nextDouble(), 165*rand.nextDouble()), 10, white));
+        }
+        list.addHitable(new Translate(new RotateY(new BVH_node(boxList2.getHitList(), 0.0, 1.0), 15), new Vector3(-100, 270, 395)));
+        return list;
+        //return new BVH_node(list.getHitList(),0.0, 1.0);
     }
 
     public static Camera cam_for_two_spheres(double nx, double ny)
@@ -319,5 +414,15 @@ public class SimpleTest {
         double dist_to_focus = 10.0;
         double aperture = 0.0;
         return new Camera(lookfrom, lookat, new Vector3(0,1,0), 40, nx/ny, aperture, dist_to_focus);
+    }
+
+    public static Camera cam_for_final(double nx, double ny)
+    {
+        Vector3 lookfrom = new Vector3(478, 278, -600);
+        Vector3 lookat = new Vector3(278,278,0);//new Vector3(400, 400, 200);//
+        double dist_to_focus = 10.0;
+        double aperture = 0.0;
+        double vfov = 40.0;
+        return new Camera(lookfrom, lookat, new Vector3(0,1,0), vfov, nx/ny, aperture, dist_to_focus, 0, 1);
     }
 }

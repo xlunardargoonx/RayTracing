@@ -32,6 +32,8 @@ public class NoiseTexture extends Texture
         //camo turb
         //return new Vector3(1,1,1).multiplyConst(noise.turb(p.multiplyConst(scale), 7));
         //marble turb
-        return new Vector3(1,1,1).multiplyConst((Math.sin(noise.turb(p, 7)*10 + scale*p.z())+1)*0.5);
+        //return new Vector3(1,1,1).multiplyConst((Math.sin(noise.turb(p, 7)*10 + scale*p.z())+1)*0.5);
+        //marble for final picture in book 2
+        return new Vector3(1,1,1).multiplyConst((Math.sin(noise.turb(p.multiplyConst(scale), 7)*5 + scale*p.x())+1)*0.5);
     }
 }

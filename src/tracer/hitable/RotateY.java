@@ -21,7 +21,7 @@ public class RotateY extends Hitable
         bbox = new AABB();
         hasBox = obj.bounding_box(0,1, bbox);
         Vector3 min = new Vector3(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-        Vector3 max = new Vector3(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE);
+        Vector3 max = new Vector3(-Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE);
         for(int i = 0; i < 2; i++)
         {
             for (int j = 0; j < 2; j++)
