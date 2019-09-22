@@ -21,7 +21,7 @@ public class ImageTexture extends Texture
         }
         catch(IOException e)
         {
-
+            System.out.println("no such image");
         }
     }
 

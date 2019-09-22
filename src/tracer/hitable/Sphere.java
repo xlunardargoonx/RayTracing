@@ -53,30 +53,46 @@ public class Sphere extends Hitable
 
         if(discriminant > 0)
         {
-            double temp = (-b - Math.sqrt(discriminant)) / a;
-            if(temp < t_max && temp > t_min)
+            double possibleRoots[] = {(-b - Math.sqrt(discriminant))/a, (-b + Math.sqrt(discriminant))/a};
+
+            for(double temp : possibleRoots)
             {
-                rec.setT(temp);
-                rec.setP(r.point_at_parameter(rec.getT()));
-                rec.setNormal(rec.getP().subtractVec(center).divideConst(radius));
-                rec.setMat(mat);
-                Vector3 uv = get_sphere_uv(rec.getP().subtractVec(center).divideConst(radius));
-                rec.setU(uv.x());
-                rec.setV(uv.y());
-                return true;
+                if(temp < t_max && temp > t_min)
+                {
+                    rec.setT(temp);
+                    rec.setP(r.point_at_parameter(rec.getT()));
+                    rec.setNormal(rec.getP().subtractVec(center).divideConst(radius));
+                    rec.setMat(mat);
+                    Vector3 uv = get_sphere_uv(rec.getP().subtractVec(center).divideConst(radius));
+                    rec.setU(uv.x());
+                    rec.setV(uv.y());
+                    return true;
+                }
             }
-            temp = (-b + Math.sqrt(discriminant))/a;
-            if(temp < t_max && temp > t_min)
-            {
-                rec.setT(temp);
-                rec.setP(r.point_at_parameter(rec.getT()));
-                rec.setNormal(rec.getP().subtractVec(center).divideConst(radius));
-                rec.setMat(mat);
-                Vector3 uv = get_sphere_uv(rec.getP().subtractVec(center).divideConst(radius));
-                rec.setU(uv.x());
-                rec.setV(uv.y());
-                return true;
-            }
+//            double temp = (-b - Math.sqrt(discriminant)) / a;
+//            if(temp < t_max && temp > t_min)
+//            {
+//                rec.setT(temp);
+//                rec.setP(r.point_at_parameter(rec.getT()));
+//                rec.setNormal(rec.getP().subtractVec(center).divideConst(radius));
+//                rec.setMat(mat);
+//                Vector3 uv = get_sphere_uv(rec.getP().subtractVec(center).divideConst(radius));
+//                rec.setU(uv.x());
+//                rec.setV(uv.y());
+//                return true;
+//            }
+//            temp = (-b + Math.sqrt(discriminant))/a;
+//            if(temp < t_max && temp > t_min)
+//            {
+//                rec.setT(temp);
+//                rec.setP(r.point_at_parameter(rec.getT()));
+//                rec.setNormal(rec.getP().subtractVec(center).divideConst(radius));
+//                rec.setMat(mat);
+//                Vector3 uv = get_sphere_uv(rec.getP().subtractVec(center).divideConst(radius));
+//                rec.setU(uv.x());
+//                rec.setV(uv.y());
+//                return true;
+//            }
         }
         return false;
     }
