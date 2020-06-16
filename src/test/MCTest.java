@@ -1,6 +1,10 @@
 package test;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+
+import static java.util.stream.Collectors.joining;
 
 public class MCTest
 {
@@ -8,7 +12,10 @@ public class MCTest
 
     public static void main(String[] args)
     {
-
+        List<Integer> number = Arrays.asList(2,3,4,5);
+        System.out.println(number.stream()
+                .map(i -> ((i%2==0) ? 'e' : 'o') + String.valueOf(i))
+                .collect(joining(",")));
     }
 
     public static void simpleMC()
