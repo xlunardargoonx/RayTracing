@@ -1,10 +1,13 @@
 package tracer.hitable;
 
 import tracer.HitRecord;
+import tracer.Onb;
 import tracer.Ray;
 import tracer.Vector3;
 import tracer.hitable.Hitable;
 import tracer.material.Material;
+
+import static tracer.HelperFunctions.random_to_sphere;
 
 public class Sphere extends Hitable
 {
@@ -116,5 +119,25 @@ public class Sphere extends Hitable
         double u = 1-(phi + Math.PI) / (2*Math.PI);
         double v = (theta + Math.PI/2) / Math.PI;
         return new Vector3(u, v, 0);
+    }
+
+    @Override
+    public double pdf_value(Vector3 o, Vector3 v) {
+        HitRecord rec = new HitRecord();
+        if(this.hit(new Ray(o,v), 0.001, Double.MAX_VALUE, rec)){
+            double cos_theta_max = Math.sqrt(1 - radius*radius / (center.subtractVec(o).squared_length()));
+            double solid_angle = 2*Math.PI*(1-cos_theta_max);
+            return 1 / solid_angle;
+        }
+        return 0;
+    }
+
+    @Override
+    public Vector3 random(Vector3 o) {
+        Vector3 direction = center.subtractVec(o);
+        double distance_squared = direction.squared_length();
+        Onb uvw = new Onb();
+        uvw.build_from_w(direction);
+        return  uvw.local(random_to_sphere(radius, distance_squared));
     }
 }

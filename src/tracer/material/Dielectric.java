@@ -1,8 +1,6 @@
 package tracer.material;
 
-import tracer.HitRecord;
-import tracer.Ray;
-import tracer.Vector3;
+import tracer.*;
 
 public class Dielectric extends Material
 {
@@ -14,12 +12,15 @@ public class Dielectric extends Material
     }
 
     @Override
-    public boolean scatter(Ray r_in, HitRecord rec, Vector3 attenuation, Ray scattered)
+    public boolean scatter(Ray r_in, HitRecord rec, ScatterRecord srec)
     {
+        srec.setIsSpecular(true);
+        srec.setPdf_ptr(null);
+
         Vector3 outward_normal;
         Vector3 reflected = reflect(r_in.direction(), rec.getNormal());
         double ni_over_nt;
-        attenuation.copyValue(1,1,1);
+        srec.getAttenuation().copyValue(1,1,1);
         Vector3 refracted = new Vector3();
         double reflect_prob, cosine;
 
@@ -41,22 +42,22 @@ public class Dielectric extends Material
         }
         else
         {
-            scattered.setA(rec.getP());
-            scattered.setB(reflected);
+            srec.getSpecular_ray().setA(rec.getP());
+            srec.getSpecular_ray().setB(reflected);
             reflect_prob = 1.0;
             //return false;
         }
-        if(randG.nextDouble() < reflect_prob)
+        if(HelperFunctions.randG.nextDouble() < reflect_prob)
         {
-            scattered.setA(rec.getP());
-            scattered.setB(reflected);
+            srec.getSpecular_ray().setA(rec.getP());
+            srec.getSpecular_ray().setB(reflected);
         }
         else
         {
-            scattered.setA(rec.getP());
-            scattered.setB(refracted);
+            srec.getSpecular_ray().setA(rec.getP());
+            srec.getSpecular_ray().setB(refracted);
         }
-        scattered.setTime(r_in.getTime());
+        srec.getSpecular_ray().setTime(r_in.getTime());
         return true;
     }
 

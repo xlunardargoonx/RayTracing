@@ -84,6 +84,7 @@ public class Scenes
         list.addHitable(new Sphere(new Vector3(0, 2, 0), 2, new Lambertian(pertext)));
         return list;
     }
+
     public static Hitable simple_light()
     {
         //Texture pertext = new NoiseTexture();
@@ -116,15 +117,19 @@ public class Scenes
         Material light = new DiffuseLight(new ConstantTexture(new Vector3(15, 15, 15)));
         list.addHitable(new FlipNormals(new YZRect(0, 555, 0, 555, 555, green)));
         list.addHitable(new YZRect(0, 555, 0, 555, 0, red));
-        list.addHitable(new XZRect(213, 343, 227, 332, 554, light));
-        //list.addHitable(new FlipNormals(new XZRect(213, 343, 227, 332, 554, light)));
+        //list.addHitable(new XZRect(213, 343, 227, 332, 554, light));
+        list.addHitable(new FlipNormals(new XZRect(213, 343, 227, 332, 554, light)));
         list.addHitable(new FlipNormals(new XZRect(0, 555, 0, 555, 555, white)));
         list.addHitable(new XZRect(0, 555, 0, 555, 0, white));
         list.addHitable(new FlipNormals(new XYRect(0, 555, 0, 555, 555, white)));
 //        list.addHitable(new Box(new Vector3(130, 0, 65), new Vector3(295, 165, 230), white));
 //        list.addHitable(new Box(new Vector3(265, 0 , 295), new Vector3(430, 330, 460), white));
-        list.addHitable(new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 165, 165), white), -18), new Vector3(130, 0, 65)));
+//        list.addHitable(new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 165, 165), white), -18), new Vector3(130, 0, 65)));
         list.addHitable(new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 330, 165), white), 15), new Vector3(265, 0, 295)));
+//        Material aluminum = new Metal(new ConstantTexture(new Vector3(0.8, 0.85, 0.88)), 0.0);
+//        list.addHitable(new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 330, 165), aluminum), 15), new Vector3(265, 0, 295)));
+        Material glass = new Dielectric(1.5);
+        list.addHitable(new Sphere(new Vector3(190, 90, 190), 90, glass));
         return list;
     }
 
@@ -137,7 +142,8 @@ public class Scenes
         Material light = new DiffuseLight(new ConstantTexture(new Vector3(7, 7, 7)));
         list.addHitable(new FlipNormals(new YZRect(0, 555, 0, 555, 555, green)));
         list.addHitable(new YZRect(0, 555, 0, 555, 0, red));
-        list.addHitable(new XZRect(113, 443, 127, 432, 554, light));
+        //list.addHitable(new XZRect(113, 443, 127, 432, 554, light));
+        list.addHitable(new FlipNormals(new XZRect(113, 443, 127, 432, 554, light)));
         list.addHitable(new FlipNormals(new XZRect(0, 555, 0, 555, 555, white)));
         list.addHitable(new XZRect(0, 555, 0, 555, 0, white));
         list.addHitable(new FlipNormals(new XYRect(0, 555, 0, 555, 555, white)));
@@ -183,7 +189,7 @@ public class Scenes
         list.addHitable(new BVH_node(boxList.getHitList(), 0 ,1));
 
         Material light = new DiffuseLight(new ConstantTexture(new Vector3(7,7,7)));
-        list.addHitable(new XZRect(123, 423, 147, 412, 554, light));
+        list.addHitable(new FlipNormals(new XZRect(123, 423, 147, 412, 554, light)));
 
         Vector3 center = new Vector3(400, 400, 200);
         /* moving ball in the upper left */

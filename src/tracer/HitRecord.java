@@ -9,6 +9,7 @@ public class HitRecord
     Vector3 normal;
     Material mat;
     double u,v;
+    private double pdf;
 
     public HitRecord()
     {
@@ -95,5 +96,13 @@ public class HitRecord
         this.setMat(r.mat);
         this.setU(r.getU());
         this.setV(r.getV());
+    }
+
+    public void setPDF(double pdf) {
+        this.pdf = pdf;
+    }
+
+    public double getPDF() {
+        return pdf;
     }
 }

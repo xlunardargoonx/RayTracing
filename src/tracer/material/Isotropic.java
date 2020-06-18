@@ -1,8 +1,9 @@
 package tracer.material;
 
+import tracer.HelperFunctions;
 import tracer.HitRecord;
 import tracer.Ray;
-import tracer.Vector3;
+import tracer.ScatterRecord;
 import tracer.texture.Texture;
 
 public class Isotropic extends Material
@@ -15,11 +16,13 @@ public class Isotropic extends Material
     }
 
     @Override
-    public boolean scatter(Ray r_in, HitRecord rec, Vector3 attenuation, Ray scattered)
+    public boolean scatter(Ray r_in, HitRecord rec, ScatterRecord srec)
     {
-        scattered.setA(rec.getP());
-        scattered.setB(randomInUnitSphere());
-        attenuation.copyValue(albedo.value(rec.getU(), rec.getV(), rec.getP()));
+        srec.setPdf_ptr(null);
+        srec.setIsSpecular(true);
+        srec.getSpecular_ray().setA(rec.getP());
+        srec.getSpecular_ray().setB(HelperFunctions.randomInUnitSphere());
+        srec.getAttenuation().copyValue(albedo.value(rec.getU(), rec.getV(), rec.getP()));
         return true;
     }
 }

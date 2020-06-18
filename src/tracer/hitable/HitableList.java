@@ -7,6 +7,8 @@ import tracer.Vector3;
 import java.util.ArrayList;
 import java.util.List;
 
+import static tracer.HelperFunctions.randG;
+
 public class HitableList extends Hitable
 {
     List<Hitable> hitList;
@@ -59,5 +61,21 @@ public class HitableList extends Hitable
             else return false;
         }
         return true;
+    }
+
+    @Override
+    public double pdf_value(Vector3 o, Vector3 v) {
+        double weight = 1.0/hitList.size();
+        double sum = 0;
+        for(Hitable hitable : hitList){
+            sum += weight * hitable.pdf_value(o,v);
+        }
+        return sum;
+    }
+
+    @Override
+    public Vector3 random(Vector3 o) {
+        int index = randG.nextInt(hitList.size());
+        return hitList.get(index).random(o);
     }
 }

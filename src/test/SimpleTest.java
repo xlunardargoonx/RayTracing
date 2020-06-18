@@ -20,13 +20,20 @@ public class SimpleTest {
 
     public static void main(String[] args)
     {
-        SceneResolution resolution = SceneResolution.S_200X100;
+        SceneResolution resolution = SceneResolution.S_500X500;
         int nx = resolution.getWidth();
         int ny = resolution.getHeight();
-        int ns = 100;
+        int ns = 10;
 
         Camera cam = cam_for_final(nx, ny);
         Hitable world = final_scene();
+        HitableList lights = new HitableList();
+        //Hitable light_shape = new XZRect(213, 343, 227, 332, 554, null);
+        //Hitable light_shape = new XZRect(113, 443, 127, 432, 554, null);
+        Hitable light_shape = new XZRect(123, 423, 147, 412, 554, null);
+        Hitable glass_sphere = new Sphere(new Vector3(190, 90, 190), 90, null);
+        lights.addHitable(light_shape);
+        //lights.addHitable(glass_sphere);
         BufferedImage bufferedImage = new BufferedImage(nx,ny,BufferedImage.TYPE_INT_ARGB);
 
         LocalTime start = LocalTime.now();
@@ -42,7 +49,7 @@ public class SimpleTest {
                     double v = ((double) j + rand.nextDouble()) / (double) ny;
 
                     Ray r = cam.getRay(u, v);
-                    col = col.addVec(color(r, world, 0));
+                    col = col.addVec(de_nan(color(r, world, lights,0)));
                 }
                 col = col.divideConst(ns);
                 //gamma corrected "gamma 2" = square root = raise to 1/gamma
