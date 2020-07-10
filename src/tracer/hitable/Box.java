@@ -3,7 +3,9 @@ package tracer.hitable;
 import tracer.HitRecord;
 import tracer.Ray;
 import tracer.Vector3;
+import tracer.material.Lambertian;
 import tracer.material.Material;
+import tracer.texture.ConstantTexture;
 
 public class Box extends Hitable
 {
@@ -15,10 +17,10 @@ public class Box extends Hitable
         this.pmin = pmin;
         this.pmax = pmax;
         list = new HitableList();
+        Material blue = new Lambertian(new ConstantTexture(new Vector3(0.05, 0.05, 0.65)));
         list.addHitable(new XYRect(pmin.x(), pmax.x(), pmin.y(), pmax.y(), pmax.z(), mat));
         list.addHitable(new FlipNormals(new XYRect(pmin.x(), pmax.x(), pmin.y(), pmax.y(), pmin.z(), mat)));
         list.addHitable(new XZRect(pmin.x(), pmax.x(), pmin.z(), pmax.z(), pmax.y(), mat));
-        //System.out.println(pmin.x() + " " +  pmax.x() + " " +  pmin.z() + " " +  pmax.z() + " " + pmin.y());
         list.addHitable(new FlipNormals(new XZRect(pmin.x(), pmax.x(), pmin.z(), pmax.z(), pmin.y(), mat)));
         //list.addHitable(new XZRect(pmin.x(), pmax.x(), pmin.z(), pmax.z(), pmin.y(), mat));
         list.addHitable(new YZRect(pmin.y(), pmax.y(), pmin.z(), pmax.z(), pmax.x(), mat));

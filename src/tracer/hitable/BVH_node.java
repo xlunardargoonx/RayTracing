@@ -10,14 +10,14 @@ public class BVH_node extends Hitable
 {
     Hitable left, right;
     AABB box;
-
+    static Random rand = new Random(42);
     public BVH_node()
     {
     }
 
     public BVH_node(List<Hitable> l, double time0, double time1)
     {
-        Random rand = new Random(42);
+        //Random rand = new Random(42);
         int axis = (int)(3*rand.nextDouble());
 
         //sort based on axis
@@ -49,8 +49,6 @@ public class BVH_node extends Hitable
             System.out.println("NO bounding box in bvh_node constructer");
         box = new AABB();
         AABB.surrounding_box(box_left, box_right, box);
-//        System.out.println("List size = " + l.size());
-//        System.out.println("Distance = " + box.getMax().subtractVec(box.getMin()).length());
     }
 
     @Override
@@ -100,7 +98,8 @@ public class BVH_node extends Hitable
         }
 
         if(box_left.min.getE(i) - box_right.min.getE(i) < 0.0) return -1;
-        return 1;
+        if(box_left.min.getE(i) - box_right.min.getE(i) > 0.0) return 1;
+        return 0;
     }
 
     private static int boxXCompare(Hitable a, Hitable b)

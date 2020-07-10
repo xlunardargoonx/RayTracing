@@ -63,7 +63,7 @@ public class HelperFunctions
                 Ray scattered = new Ray(rec.getP(), Vector3.unit_vec(p.generate()), r.getTime());
                 double pdf_val = p.value((scattered.direction()));
                 return srec.getAttenuation()
-                        .multiplyVec(color(scattered,world, light_shape, depth+1))
+                        .multiplyVec(color(scattered, world, light_shape, depth+1))
                         .multiplyConst(rec.getMat().scattering_pdf(r, rec, scattered)/ pdf_val/*rec.getPDF()*/)
                         .addVec(emitted);
             }

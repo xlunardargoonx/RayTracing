@@ -128,8 +128,27 @@ public class Scenes
         list.addHitable(new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 330, 165), white), 15), new Vector3(265, 0, 295)));
 //        Material aluminum = new Metal(new ConstantTexture(new Vector3(0.8, 0.85, 0.88)), 0.0);
 //        list.addHitable(new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 330, 165), aluminum), 15), new Vector3(265, 0, 295)));
-        Material glass = new Dielectric(1.5);
-        list.addHitable(new Sphere(new Vector3(190, 90, 190), 90, glass));
+//        Material glass = new Dielectric(1.5);
+//        list.addHitable(new Sphere(new Vector3(190, 90, 190), 90, glass));
+
+
+        Material blue = new Lambertian(new ConstantTexture(new Vector3(0.05, 0.05, 0.65)));
+        //list.addHitable(new FlipNormals(new XYRect(pmin.x(), pmax.x(), pmin.y(), pmax.y(), pmin.z(), mat)));
+        //list.addHitable(new Translate(new FlipNormals(new XYRect(0, 165, 0, 165, 0, blue)), new Vector3(130, 0, 65)));
+        OBJ bunny = new OBJ("data/bunny.obj", white, 100);
+        list.addHitable(new Translate(new RotateY(bunny, 180),new Vector3(160, 100, 85)));
+        //OBJ dragon = new OBJ("data/dragon.obj", blue, 100);
+        //list.addHitable(new Translate(dragon, new Vector3(160, 50, 85)));
+        //OBJ bear = new OBJ("data/bear.obj", blue, 12);
+        //list.addHitable(new Translate(bear, new Vector3(160, 50, 85)));
+        //new XYRect(pmin.x(), pmax.x(), pmin.y(), pmax.y(), pmax.z(), mat);
+//        list.addHitable(new Translate(new XYRect(0, 165, 0, 330, 165, white), new Vector3(130, 0, 65)));
+//        //new XZRect(pmin.x(), pmax.x(), pmin.z(), pmax.z(), pmax.y(), mat)
+//        list.addHitable(new Translate(new XZRect(0, 165, 0, 165, 330, white), new Vector3(130, 0, 65)));
+//        //new YZRect(pmin.y(), pmax.y(), pmin.z(), pmax.z(), pmax.x(), mat)
+//        list.addHitable(new Translate(new FlipNormals(new YZRect(0, 330, 0, 165, 165, white)), new Vector3(130, 0, 65)));
+//        Triangle tri = new Triangle(new Vector3(0,0,0), new Vector3(165,0,0), new Vector3(0,165,0), blue);
+//        list.addHitable(new Translate(new FlipNormals(tri), new Vector3(130, 0, 65)));
         return list;
     }
 

@@ -23,10 +23,10 @@ public class SimpleTest {
         SceneResolution resolution = SceneResolution.S_500X500;
         int nx = resolution.getWidth();
         int ny = resolution.getHeight();
-        int ns = 10;
+        int ns = 200;
 
-        Camera cam = cam_for_final(nx, ny);
-        Hitable world = final_scene();
+        Camera cam = cam_for_cornell_box(nx, ny);
+        Hitable world = cornell_box();
         HitableList lights = new HitableList();
         //Hitable light_shape = new XZRect(213, 343, 227, 332, 554, null);
         //Hitable light_shape = new XZRect(113, 443, 127, 432, 554, null);

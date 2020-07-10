@@ -26,14 +26,11 @@ public class ConstantMedium extends Hitable
     @Override
     public boolean hit(Ray r, double t_min, double t_max, HitRecord rec)
     {
-//        boolean db = rand.nextDouble() < 0.00001;
-//        db = false;
         HitRecord rec1 = new HitRecord(), rec2 = new HitRecord();
         if(boundary.hit(r, -Double.MAX_VALUE, Double.MAX_VALUE, rec1))
         {
             if(boundary.hit(r, rec1.getT()+0.0001, Double.MAX_VALUE, rec2))
             {
-                //if(db) System.out.println("\nt0 t1 " + rec1.getT() + " " + rec2.getT());
                 if(rec1.getT() < t_min)
                     rec1.setT(t_min);
                 if(rec2.getT() > t_max)
