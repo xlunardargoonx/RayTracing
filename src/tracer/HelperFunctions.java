@@ -62,6 +62,7 @@ public class HelperFunctions
                 MixturePDF p = new MixturePDF(plight, srec.getPdf_ptr());
                 Ray scattered = new Ray(rec.getP(), Vector3.unit_vec(p.generate()), r.getTime());
                 double pdf_val = p.value((scattered.direction()));
+                //bug what if pdf_val is 0, then we have divide by 0
                 return srec.getAttenuation()
                         .multiplyVec(color(scattered, world, light_shape, depth+1))
                         .multiplyConst(rec.getMat().scattering_pdf(r, rec, scattered)/ pdf_val/*rec.getPDF()*/)
@@ -111,6 +112,18 @@ public class HelperFunctions
         double phi = 2*Math.PI*r1;
         double x = Math.cos(phi) * 2 * Math.sqrt(r2);
         double y = Math.sin(phi) * 2 * Math.sqrt(r2);
+        return new Vector3(x, y, z);
+    }
+
+    public static Vector3 random_gloss_direction(int n){
+        double r1 = randG.nextDouble();
+        double r2 = randG.nextDouble();
+        double z = Math.pow(1-r2, 1.0/(n+1));
+        double phi = 2*Math.PI*r1;
+
+        double alpha = Math.sqrt(Math.pow(r2, 2/(n+1)));
+        double x = Math.cos(phi) * alpha * 2;
+        double y = Math.sin(phi) * alpha * 2;
         return new Vector3(x, y, z);
     }
 

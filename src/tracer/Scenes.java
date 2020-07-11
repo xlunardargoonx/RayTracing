@@ -115,6 +115,7 @@ public class Scenes
         Material white = new Lambertian(new ConstantTexture(new Vector3(0.73, 0.73, 0.73)));
         Material green = new Lambertian(new ConstantTexture(new Vector3(0.12, 0.45, 0.15)));
         Material light = new DiffuseLight(new ConstantTexture(new Vector3(15, 15, 15)));
+        Material gloss = new Glossy(new ConstantTexture(new Vector3(0.73, 0.73, 0.73)), 50);
         list.addHitable(new FlipNormals(new YZRect(0, 555, 0, 555, 555, green)));
         list.addHitable(new YZRect(0, 555, 0, 555, 0, red));
         //list.addHitable(new XZRect(213, 343, 227, 332, 554, light));
@@ -125,18 +126,18 @@ public class Scenes
 //        list.addHitable(new Box(new Vector3(130, 0, 65), new Vector3(295, 165, 230), white));
 //        list.addHitable(new Box(new Vector3(265, 0 , 295), new Vector3(430, 330, 460), white));
 //        list.addHitable(new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 165, 165), white), -18), new Vector3(130, 0, 65)));
-        list.addHitable(new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 330, 165), white), 15), new Vector3(265, 0, 295)));
+        list.addHitable(new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 330, 165), gloss), 15), new Vector3(265, 0, 295)));
 //        Material aluminum = new Metal(new ConstantTexture(new Vector3(0.8, 0.85, 0.88)), 0.0);
 //        list.addHitable(new Translate(new RotateY(new Box(new Vector3(0,0,0), new Vector3(165, 330, 165), aluminum), 15), new Vector3(265, 0, 295)));
 //        Material glass = new Dielectric(1.5);
-//        list.addHitable(new Sphere(new Vector3(190, 90, 190), 90, glass));
+        list.addHitable(new Sphere(new Vector3(190, 90, 190), 90, gloss));
 
 
         Material blue = new Lambertian(new ConstantTexture(new Vector3(0.05, 0.05, 0.65)));
         //list.addHitable(new FlipNormals(new XYRect(pmin.x(), pmax.x(), pmin.y(), pmax.y(), pmin.z(), mat)));
         //list.addHitable(new Translate(new FlipNormals(new XYRect(0, 165, 0, 165, 0, blue)), new Vector3(130, 0, 65)));
         OBJ bunny = new OBJ("data/bunny.obj", white, 100);
-        list.addHitable(new Translate(new RotateY(bunny, 180),new Vector3(160, 100, 85)));
+        //list.addHitable(new Translate(new RotateY(bunny, 180),new Vector3(160, 100, 85)));
         //OBJ dragon = new OBJ("data/dragon.obj", blue, 100);
         //list.addHitable(new Translate(dragon, new Vector3(160, 50, 85)));
         //OBJ bear = new OBJ("data/bear.obj", blue, 12);

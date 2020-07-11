@@ -23,7 +23,7 @@ public class SimpleTest {
         SceneResolution resolution = SceneResolution.S_500X500;
         int nx = resolution.getWidth();
         int ny = resolution.getHeight();
-        int ns = 200;
+        int ns = 1000;
 
         Camera cam = cam_for_cornell_box(nx, ny);
         Hitable world = cornell_box();
