@@ -31,7 +31,9 @@ public class Glossy extends Material{
         Vector3 reflected = reflect(Vector3.unit_vec(r_in.direction()), rec.getNormal());
         //double cosine = rec.getNormal().dot(scattered.direction());
         double cosine = reflected.dot(scattered.direction());
-        if(cosine < 0) cosine = 0;
-        return Math.pow(cosine, specular_exponent) / (2*Math.PI) * (specular_exponent+1);
+        if(cosine <= 0) cosine = 0;
+        //calculate throughput and normalizationfactor
+        double normalizationFactor = (specular_exponent + 2.0) / (2.0*Math.PI);
+        return Math.pow(cosine, specular_exponent) * normalizationFactor;
     }
 }
